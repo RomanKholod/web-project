@@ -7,7 +7,6 @@ const products = [
   { id: 6, name: 'Grapes', price: 2.0, image: 'images/grapes.jpg' },
   { id: 7, name: 'Orange', price: 1.3, image: 'images/orange.jpg' },
   { id: 8, name: 'Peach', price: 1.8, image: 'images/peach.jpg' },
-  // Add more products here if needed
 ];
 
 const cart = [];
@@ -50,54 +49,59 @@ function renderProducts() {
   });
 }
 
-// Dynamic carousel for displaying images
-function renderDynamicCarousel() {
-  const dynamicCarousel = document.getElementById('dynamic-carousel');
-  dynamicCarousel.innerHTML = ''; // Clear existing content
-
-  products.forEach(product => {
+function renderCart() {
+  const cartModal = document.getElementById('cart');
+  const cartItemsContainer = cartModal.querySelector('#cart-items');
+  cartItemsContainer.innerHTML = ''; // Clear previous items
+  
+  let total = 0;
+  cart.forEach(item => {
     const div = document.createElement('div');
-    div.className = 'image-slide';
-    div.innerHTML = `<img src="${product.image}" alt="${product.name}" />`;
-    dynamicCarousel.appendChild(div);
+    div.className = 'cart-item';
+    div.innerHTML = `
+      <span>${item.name} x ${item.quantity}</span>
+      <button onclick="removeFromCart(${item.id})">-</button>
+      <span>${item.quantity}</span>
+      <button onclick="addToCart(${item.id})">+</button>
+    `;
+    cartItemsContainer.appendChild(div);
+    total += item.price * item.quantity;
   });
 
-  // After rendering, adjust the initial slide position
-  showSlide();
+  document.getElementById('total').textContent = total.toFixed(2);
 }
 
-// Carousel navigation logic
-let currentSlide = 0;
-
-function showSlide() {
-  const slides = document.querySelectorAll('.image-slide');
-  const totalSlides = slides.length;
-  const dynamicCarousel = document.querySelector('.dynamic-carousel');
-  dynamicCarousel.style.transform = `translateX(-${currentSlide * (100 / 4)}%)`; // Adjust width for 4 or 3 items
+function closeCart() {
+  const cartModal = document.getElementById('cart');
+  cartModal.classList.remove('open');
 }
 
-function nextSlide() {
-  const slides = document.querySelectorAll('.image-slide');
-  const totalSlides = slides.length;
-  if (currentSlide < totalSlides - 4) { // Adjust based on 4 visible items at once
-    currentSlide++;
+function showThankYouMessage() {
+  alert("Thanks for your purchase!");
+  cart.length = 0;  // Clear cart after purchase
+  renderCart();
+}
+
+// Cart button event listener to open the cart modal
+document.querySelector('.burger').addEventListener('click', () => {
+  const cartModal = document.getElementById('cart');
+  cartModal.classList.toggle('open');
+});
+
+// Event listener for Close Cart button
+document.getElementById('close-cart').addEventListener('click', closeCart);
+
+// Event listener for Order button
+document.getElementById('order-btn').addEventListener('click', () => {
+  const name = document.getElementById('name').value;
+  const email = document.getElementById('email').value;
+
+  if (name && email) {
+    showThankYouMessage();  // Show thank you message
   } else {
-    currentSlide = 0;
+    alert("Please enter your name and email to complete the order.");
   }
-  showSlide();
-}
+});
 
-function prevSlide() {
-  const slides = document.querySelectorAll('.image-slide');
-  const totalSlides = slides.length;
-  if (currentSlide > 0) {
-    currentSlide--;
-  } else {
-    currentSlide = totalSlides - 4; // Loop back to last visible set
-  }
-  showSlide();
-}
-
-// Initialize everything
+// Initialize products on page load
 renderProducts();
-renderDynamicCarousel();
