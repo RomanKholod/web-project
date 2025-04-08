@@ -14,8 +14,17 @@
     <button class="burger" onclick="toggleCart()">🛒 Cart</button>
   </header>
 
-  <!-- Product Carousel -->
+  <!-- Product Carousel (Existing one) -->
   <div id="carousel" class="carousel"></div>
+
+  <!-- New Dynamic Fruit Image Carousel -->
+  <div class="dynamic-carousel-container">
+    <div class="dynamic-carousel" id="dynamic-carousel">
+      <!-- Images will be injected here dynamically -->
+    </div>
+    <button class="carousel-btn prev" onclick="prevSlide()">❮</button>
+    <button class="carousel-btn next" onclick="nextSlide()">❯</button>
+  </div>
 
   <!-- Cart Modal -->
   <div class="cart">
